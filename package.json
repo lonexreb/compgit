@@ -1,0 +1,24 @@
+{
+  "name": "compgit",
+  "version": "0.0.0",
+  "private": true,
+  "description": "GitHub commit tracker across Chrome, iPhone, and macOS",
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=20.11"
+  },
+  "scripts": {
+    "gen:schema": "pnpm --filter @compgit/schemagen run generate",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "build": "turbo run build",
+    "lint": "biome check .",
+    "format": "biome format . --write",
+    "check:schema-drift": "pnpm gen:schema && git diff --exit-code -- 'packages/shared-ts/src/generated.ts' 'packages/shared-swift/Sources/CompgitSchema/Generated.swift'"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "turbo": "^2.3.3",
+    "typescript": "^5.6.3"
+  }
+}

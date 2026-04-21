@@ -1,0 +1,6 @@
+packages:
+  - "apps/chrome"
+  - "apps/worker"
+  - "packages/schema"
+  - "packages/shared-ts"
+  - "tools/schemagen"

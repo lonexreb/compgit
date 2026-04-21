@@ -1,0 +1,33 @@
+{
+  "name": "@compgit/chrome",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "compgit Chrome / Edge / Firefox extension.",
+  "scripts": {
+    "dev": "wxt",
+    "dev:firefox": "wxt --browser firefox",
+    "build": "wxt build",
+    "build:firefox": "wxt build --browser firefox",
+    "zip": "wxt zip",
+    "typecheck": "wxt prepare && tsc --noEmit",
+    "postinstall": "wxt prepare"
+  },
+  "dependencies": {
+    "@compgit/shared": "workspace:*",
+    "@fontsource-variable/fraunces": "^5.2.5",
+    "@fontsource-variable/jetbrains-mono": "^5.2.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.2.3",
+    "@types/chrome": "^0.0.287",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@wxt-dev/module-react": "^1.2.2",
+    "tailwindcss": "^4.2.3",
+    "typescript": "^5.6.3",
+    "wxt": "^0.20.25"
+  }
+}

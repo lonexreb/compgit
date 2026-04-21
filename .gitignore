@@ -1,0 +1,22 @@
+node_modules/
+dist/
+.output/
+.turbo/
+.wrangler/
+.wxt/
+coverage/
+*.log
+.DS_Store
+.env
+.env.local
+.vscode/
+.idea/
+
+# Xcode / SPM
+xcuserdata/
+*.xcuserstate
+DerivedData/
+build/
+.build/
+Package.resolved
+*.xcworkspace/xcuserdata/

@@ -1,0 +1,28 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "ui": "stream",
+  "tasks": {
+    "typecheck": {
+      "dependsOn": ["^typecheck"],
+      "inputs": ["src/**", "tsconfig.json", "tsconfig.*.json"],
+      "outputs": []
+    },
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "tsconfig.json"],
+      "outputs": ["dist/**", ".output/**"]
+    },
+    "test": {
+      "dependsOn": ["^typecheck"],
+      "inputs": ["src/**", "vitest.config.ts", "tsconfig.json"],
+      "outputs": ["coverage/**"]
+    },
+    "generate": {
+      "inputs": ["../../packages/schema/**/*.json", "generate.ts"],
+      "outputs": [
+        "../../packages/shared-ts/src/generated.ts",
+        "../../packages/shared-swift/Sources/CompgitSchema/Generated.swift"
+      ]
+    }
+  }
+}

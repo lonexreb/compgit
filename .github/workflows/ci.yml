@@ -1,0 +1,41 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  ts:
+    name: typescript
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm gen:schema
+      - name: schema drift check
+        run: |
+          git diff --exit-code -- \
+            packages/shared-ts/src/generated.ts \
+            packages/shared-swift/Sources/CompgitSchema/Generated.swift
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm test
+
+  swift:
+    name: swift package
+    runs-on: macos-14
+    defaults:
+      run:
+        working-directory: packages/shared-swift
+    steps:
+      - uses: actions/checkout@v4
+      - run: swift build
+      # Tests land in Phase 2 once Xcode projects drive real APIs.

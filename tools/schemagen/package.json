@@ -1,0 +1,16 @@
+{
+  "name": "@compgit/schemagen",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Emits TypeScript + Swift models from packages/schema/compgit.schema.json.",
+  "scripts": {
+    "generate": "tsx generate.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  }
+}
