@@ -11,6 +11,7 @@
   <a href="#what-ships-today">What ships today</a> ·
   <a href="#design">Design</a> ·
   <a href="./CLAUDE.md">CLAUDE.md</a> ·
+  <a href="./NEXT-TO-DO.md">Next to do</a> ·
   <a href="./wiki/Home.md">Wiki</a>
 </p>
 
@@ -34,10 +35,13 @@ And a comparison tab to see your pace against the devs you follow. *(Phase 3)*
 |---|---|---|
 | 0 | Monorepo, schema-as-source-of-truth, TS + Swift codegen, CI | ✅ done |
 | 1 | Chrome extension MVP — popup, side panel, options, background refresh | ✅ done |
-| 2 | iPhone + macOS widgets | in progress |
+| 2a | Swift core — `GitHubClient`, `SharedStore`, `KeychainPAT`, aggregation | ✅ done |
+| 2b | iOS + macOS Xcode projects + widget extensions | 🟡 blocked on Xcode install |
 | 3 | Follow devs and compare | planned |
 | 4 | Cloudflare Worker + OAuth | planned |
 | 5 | Hour-of-day trends, Lock Screen widget, macOS menu bar, store releases | planned |
+
+See [`NEXT-TO-DO.md`](./NEXT-TO-DO.md) for the resumable checklist.
 
 ## Getting started
 
@@ -48,7 +52,7 @@ pnpm install
 pnpm gen:schema        # emits TS + Swift models from packages/schema
 pnpm typecheck
 pnpm lint
-pnpm test
+pnpm test              # 41 Vitest tests over packages/shared-ts
 ```
 
 ### Run the Chrome extension
@@ -60,6 +64,14 @@ pnpm -F @compgit/chrome dev       # launches Chrome with the unpacked extension
 1. On first install, the Options page opens automatically.
 2. Paste a [fine-grained GitHub PAT](https://github.com/settings/personal-access-tokens/new) with `read:user` scope.
 3. Click the compgit icon in the toolbar to see today's count; right-click the icon → "Open side panel" for the heatmap and trends.
+
+### Build the Swift package
+
+```bash
+cd packages/shared-swift && swift build
+```
+
+Compiles `CompgitSchema` + `CompgitCore` on Command Line Tools alone. The iOS/macOS apps that consume it require full Xcode (Phase 2b).
 
 ### Build for production
 
@@ -75,23 +87,27 @@ Outputs land in `apps/chrome/.output/`. Popup and sidepanel bundles stay under 1
 ```
 compgit/
 ├── apps/
-│   ├── chrome/          WXT extension (React + Tailwind v4)
-│   ├── ios/             Xcode project                       (Phase 2)
-│   ├── macos/           Xcode project                       (Phase 2)
-│   └── worker/          Cloudflare Worker                   (Phase 4)
+│   ├── chrome/          WXT extension (React + Tailwind v4)    ✅ shipped
+│   ├── ios/             Xcode project                          🟡 Phase 2b
+│   ├── macos/           Xcode project                          🟡 Phase 2b
+│   └── worker/          Cloudflare Worker                      📋 Phase 4
 ├── packages/
 │   ├── schema/          compgit.schema.json — source of truth
-│   ├── shared-ts/       GitHub client, cache, aggregation, Zod guards
-│   └── shared-swift/    Swift package mirroring shared-ts   (Phase 2)
+│   ├── shared-ts/       GitHub client, cache, aggregation, Zod
+│   └── shared-swift/    CompgitCore (GitHubClient, SharedStore,
+│                        KeychainPAT, Aggregate, Time, Errors)  ✅ shipped
 ├── tools/
 │   └── schemagen/       JSON Schema → TS + Swift emitter
 ├── wiki/                Obsidian vault — project knowledge base
 │   ├── Home.md
 │   ├── entities/        One file per concept (Karpathy wiki style)
 │   ├── decisions/       Dated decisions log
-│   └── daily/           Daily notes
+│   ├── daily/           Daily notes
+│   └── glossary.md
+├── assets/              SVG banner + any shipped static assets
 ├── CLAUDE.md            Agent runbook
 ├── MEMORY.md            Compounding project memory
+├── NEXT-TO-DO.md        Resumable checklist — what to pick up next
 └── README.md
 ```
 
@@ -111,6 +127,15 @@ Full phase plan, verification steps per phase, and architectural decisions live 
 - `pnpm typecheck` — tsc across all TS workspaces via Turborepo.
 - `pnpm lint` / `pnpm format` — Biome.
 - `pnpm check:schema-drift` — regenerates the model code and fails if it differs from what's committed.
+- `cd packages/shared-swift && swift build` — builds the Swift core.
+
+## Knowledge base
+
+The `wiki/` folder is a live Obsidian vault. Open it with **File → Open Vault → `path/to/compgit/wiki`** to get backlinks and graph view. The vault follows Karpathy-style wiki management:
+
+- **Atomic entity pages** — one concept per file, heavy `[[wikilinks]]`.
+- **Dated decisions** — every fork in the road lives in `decisions/YYYY-MM-DD-slug.md` and names its alternatives.
+- **Daily notes** — short progress log, 3–6 bullets per day.
 
 ## Licence
 

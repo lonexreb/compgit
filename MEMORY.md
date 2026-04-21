@@ -7,6 +7,7 @@
 ## Project
 
 - Product: [[wiki/entities/compgit]] — GitHub commit tracker across Chrome + iOS + macOS.
+- Repo: <https://github.com/lonexreb/compgit> (public, MIT).
 - v1 auth is **PAT-first**, no backend. OAuth + Cloudflare Worker arrive in Phase 4. — [[wiki/decisions/2026-04-20-pat-first-auth]]
 - Target: solo hobbyist shipping across three surfaces. Full native path, Apple Developer fee accepted.
 - Domain owned by user; reserved for Phase 4 OAuth callback.
@@ -17,15 +18,18 @@
 - quicktype was dropped; `tools/schemagen/generate.ts` is a ~170-LoC hand emitter. Output is deterministic + diff-friendly. — [[wiki/decisions/2026-04-20-hand-rolled-schemagen]]
 - Chrome data flow: background alarm → fetch → write `contributions:<login>` → UI subscribes via `chrome.storage.onChanged`. — [[wiki/entities/Background-Fetch-Loop]]
 - Shared TS runtime-agnostic (runs in Chrome + Worker + Node tests). Chrome-specific driver lives in `apps/chrome/lib/chrome-storage.ts`. — [[wiki/entities/Shared-TypeScript-Core]]
+- Swift core (`GitHubClient` actor, `SharedStore`, `KeychainPAT`, `Aggregate`, `Time`, `Errors`) mirrors shared-ts by file layout; iOS/macOS widgets will consume it. — [[wiki/entities/Swift-Core]]
 - Apple side will use separate iOS + macOS Xcode projects with a shared SPM package. macOS App Groups require the Team ID prefix (`group.TEAMID.compgit`).
 - Charts are hand-rolled SVG — uPlot + Cal-Heatmap rejected for bundle size and design control. — [[wiki/decisions/2026-04-20-no-cal-heatmap]]
 
 ## Conventions
 
 - Design direction: Terminal Editorial (dark, Fraunces serif + JetBrains Mono, one accent). — [[wiki/entities/Terminal-Editorial]]
-- Tests are required on `packages/shared-ts/*` (pure modules). No component tests in Phase 1 — UI is verified manually until Phase 5.
-- Storage keys are stable contracts: `auth.token`, `me.login`, `contributions:<login>`, `last-sync`.
-- Conventional commit prefixes: `feat:`, `fix:`, `refactor:`, `docs:`, `chore:`.
+- Tests required on `packages/shared-ts/*` (pure modules). No component tests in Phase 1 — UI is verified manually until Phase 5.
+- Swift tests return with Phase 2b once full Xcode is installed; use Swift Testing (`import Testing`) per the global rule. — [[wiki/decisions/2026-04-21-removed-swift-tests]]
+- Storage keys are stable contracts across Chrome + Swift: `auth.token`, `me.login`, `contributions:<login>`, `last-sync`.
+- Conventional commit prefixes: `feat:`, `fix:`, `refactor:`, `docs:`, `chore:`, `perf:`, `test:`, `ci:`.
+- Obsidian wiki is the knowledge base. Entity pages, dated decisions, daily notes — all cross-linked with `[[wikilinks]]`.
 
 ## Gotchas
 
@@ -35,27 +39,34 @@
 - MV3 service-worker event listeners must register at top level. No `await` before `addListener`.
 - Tailwind v4 + WXT requires Vite 6 — WXT ≥ 0.20. Older pins fight each other.
 - Widget memory budget on iOS is ~30 MB — cap chart data at 14–50 points.
+- `swift build` on the dev machine uses Command Line Tools (no iOS SDK). CI runs the same command on macos-14 with Xcode 15.
+- CI workflow lives at repo root (`.github/workflows/ci.yml`) — the `compgit/` folder IS the repo root now.
 
 ## Phase progress
 
 - **Phase 0** ✅ monorepo + schema codegen + CI — verified 2026-04-20.
-- **Phase 1** ✅ Chrome extension MVP shipped — verified 2026-04-21. See decisions under `wiki/decisions/`.
-- **Phase 2** in progress — Swift core shipped (`GitHubClient`, `SharedStore`, `KeychainPAT`, `Aggregate`, `Time`). Xcode projects blocked on full Xcode install.
+- **Phase 1** ✅ Chrome extension MVP shipped — verified 2026-04-21.
+- **Phase 2a** ✅ Swift core (`GitHubClient`, `SharedStore`, `KeychainPAT`, `Aggregate`, `Time`, `Errors`) — `swift build` green 2026-04-21.
+- **Phase 2b** 🟡 iOS + macOS Xcode projects + widget extensions — blocked on full Xcode install.
 - **Phase 3** comparison across surfaces — planned.
 - **Phase 4** Cloudflare Worker + OAuth — planned, domain ready.
 - **Phase 5** polish + store submissions — planned.
 
-## Phase 2 resume notes
+Full resumable checklist lives in [NEXT-TO-DO.md](./NEXT-TO-DO.md).
 
-- iOS + macOS Xcode projects + widget extensions require full Xcode (not CLI Tools). Install Xcode first, then scaffold via XcodeGen or Xcode's new-project wizard.
-- App Group: `group.TEAMID.compgit` — pick the Team ID before creating entitlements; cascading rename is painful.
-- Keychain Sharing access group: `$(AppIdentifierPrefix)compgit` — matches `KeychainPAT.accessGroup` constructor arg.
-- Swift core surface is live in `packages/shared-swift/Sources/CompgitCore/` — `swift build` is green on CLI Tools.
-- Entity page [[wiki/entities/Swift-Core]] (Phase 2) covers the Swift side architecture.
+## Phase 2b resume notes
+
+- Xcode required: iOS SDK + WidgetKit + SwiftUI previews. `xcode-select --install` (CLI Tools) is not sufficient.
+- App Group: `group.<TEAMID>.compgit` — pick the Team ID before creating entitlements; cascading rename is painful.
+- Keychain Sharing access group: `$(AppIdentifierPrefix)compgit` — matches `KeychainPAT(accessGroup:)` constructor arg.
+- Swift core is ready to consume — structure and surface area in [[wiki/entities/Swift-Core]].
+- Consider generating `.xcodeproj` via XcodeGen (`project.yml`) so the project stays version-controlled.
 
 ## Pointers
 
 - Agent runbook: [CLAUDE.md](./CLAUDE.md)
+- Resumable TODO: [NEXT-TO-DO.md](./NEXT-TO-DO.md)
 - Wiki home: [wiki/Home.md](./wiki/Home.md)
+- Entities: [wiki/entities/](./wiki/entities/)
 - Decisions: [wiki/decisions/](./wiki/decisions/)
 - Daily notes: [wiki/daily/](./wiki/daily/)
