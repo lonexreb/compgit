@@ -40,10 +40,18 @@
 
 - **Phase 0** ✅ monorepo + schema codegen + CI — verified 2026-04-20.
 - **Phase 1** ✅ Chrome extension MVP shipped — verified 2026-04-21. See decisions under `wiki/decisions/`.
-- **Phase 2** iPhone + macOS widgets — next up.
+- **Phase 2** in progress — Swift core shipped (`GitHubClient`, `SharedStore`, `KeychainPAT`, `Aggregate`, `Time`). Xcode projects blocked on full Xcode install.
 - **Phase 3** comparison across surfaces — planned.
 - **Phase 4** Cloudflare Worker + OAuth — planned, domain ready.
 - **Phase 5** polish + store submissions — planned.
+
+## Phase 2 resume notes
+
+- iOS + macOS Xcode projects + widget extensions require full Xcode (not CLI Tools). Install Xcode first, then scaffold via XcodeGen or Xcode's new-project wizard.
+- App Group: `group.TEAMID.compgit` — pick the Team ID before creating entitlements; cascading rename is painful.
+- Keychain Sharing access group: `$(AppIdentifierPrefix)compgit` — matches `KeychainPAT.accessGroup` constructor arg.
+- Swift core surface is live in `packages/shared-swift/Sources/CompgitCore/` — `swift build` is green on CLI Tools.
+- Entity page [[wiki/entities/Swift-Core]] (Phase 2) covers the Swift side architecture.
 
 ## Pointers
 

@@ -16,6 +16,7 @@ Core concepts and modules.
 - [[entities/compgit]] — the product and its three surfaces
 - [[entities/Schema-As-Source-Of-Truth]] — one JSON Schema → TS + Swift
 - [[entities/Shared-TypeScript-Core]] — `packages/shared-ts`
+- [[entities/Swift-Core]] — `packages/shared-swift` (Phase 2)
 - [[entities/Background-Fetch-Loop]] — the 15-min alarm + refresh pipeline
 - [[entities/Terminal-Editorial]] — visual direction
 - [[entities/GitHub-GraphQL-API]] — primary data source
