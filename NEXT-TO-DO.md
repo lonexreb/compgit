@@ -45,10 +45,10 @@
 
 These move work *out of* the entitlement-click half-day so Phase 2b lands faster.
 
-- [ ] **Add an XcodeGen `project.yml`** to `apps/ios/` and `apps/macos/`. Brew install: `brew install xcodegen`. Pin to a major version. **Verify:** `xcodegen generate` (run later, post-Xcode) regenerates the same `.xcodeproj` from the YAML.
-- [ ] **Sketch `Tokens.swift`** in `packages/shared-swift/Sources/CompgitCore/` mirroring `apps/chrome/styles/tokens.css`. Pure constants — no `import SwiftUI`. **Verify:** `swift build` stays clean; values match the CSS hex values byte-for-byte.
-- [ ] **Add `baseURL` to `GitHubClient`** in shared-swift (default `https://api.github.com/graphql`) so Phase 4 can flip it to the Worker without rewriting. **Verify:** `swift build` clean; no behavior change for existing call sites.
-- [ ] **Mirror `baseURL` in `packages/shared-ts/src/github/graphql.ts`.** **Verify:** `pnpm test && pnpm typecheck` green.
+- [x] **Add an XcodeGen `project.yml`** to `apps/ios/` and `apps/macos/`. Brew install: `brew install xcodegen`. Pin to a major version. **Verify:** `xcodegen generate` (run later, post-Xcode) regenerates the same `.xcodeproj` from the YAML. _(2026-04-29 — apps/ios/project.yml + apps/macos/project.yml + READMEs landed; .gitignore excludes the generated .xcodeproj.)_
+- [x] **Sketch `Tokens.swift`** in `packages/shared-swift/Sources/CompgitCore/` mirroring `apps/chrome/styles/tokens.css`. Pure constants — no `import SwiftUI`. **Verify:** `swift build` stays clean; values match the CSS hex values byte-for-byte. _(2026-04-29 — `CompgitTokens` namespace with OKLCH triples for dark + light, type sizes in pt, 4-pt spacing, motion durations.)_
+- [x] **Add `baseURL` to `GitHubClient`** in shared-swift (default `https://api.github.com/graphql`) so Phase 4 can flip it to the Worker without rewriting. **Verify:** `swift build` clean; no behavior change for existing call sites. _(2026-04-29 — actor init now takes `baseURL: URL = GitHubClient.defaultEndpoint`.)_
+- [x] **Mirror `baseURL` in `packages/shared-ts/src/github/graphql.ts`.** **Verify:** `pnpm test && pnpm typecheck` green. _(2026-04-29 — added to `FetchContributionsArgs`; third optional arg to `fetchViewerLogin`. 43 vitest tests pass; `GITHUB_GRAPHQL_URL` is now exported.)_
 - [ ] **Replace WXT placeholder icon** in `apps/chrome/public/icon/` (16/32/48/128). **Verify:** `pnpm -F @compgit/chrome build` shows the new icon in `.output/chrome-mv3/icon/`.
 
 ---
