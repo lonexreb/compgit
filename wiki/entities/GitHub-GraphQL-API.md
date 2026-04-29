@@ -61,6 +61,8 @@ When hour-of-day trends ship in Phase 5, they'll use REST `/repos/:owner/:repo/c
 - [[Shared-TypeScript-Core]]
 - [[Background-Fetch-Loop]]
 - [[compgit]]
+- [[OAuth-Worker]] — Phase 4 fronts every GraphQL call with a 1h KV cache to keep us under the 5,000/hr ceiling
+- [[Compare-Surface]] — Phase 3's parallel-fetch-with-cap-of-4 aggregator that this rate-limit math gates
 
 ## Sources
 

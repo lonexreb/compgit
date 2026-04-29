@@ -24,8 +24,8 @@ Most developers never look at their own contribution graph unless they're applyi
 Three surfaces, one schema:
 
 - **Chrome extension** (popup + side panel) — today, heatmap, 4-period trends.
-- **iPhone widget** (Home Screen + Lock Screen) — today's count + 7-day sparkline. *(Phase 2)*
-- **macOS widget** (desktop + menu bar) — same, ambient. *(Phase 2)*
+- **iPhone widget** (Home Screen + Lock Screen) — today's count + 7-day sparkline. *(Phase 2b)*
+- **macOS widget** (desktop + menu bar) — same, ambient. *(Phase 2b)*
 
 And a comparison tab to see your pace against the devs you follow. *(Phase 3)*
 
@@ -40,8 +40,9 @@ And a comparison tab to see your pace against the devs you follow. *(Phase 3)*
 | 3 | Follow devs and compare | planned |
 | 4 | Cloudflare Worker + OAuth | planned |
 | 5 | Hour-of-day trends, Lock Screen widget, macOS menu bar, store releases | planned |
+| 6 | Crash reporting, opt-in heartbeat, status page, support triage | planned |
 
-See [`NEXT-TO-DO.md`](./NEXT-TO-DO.md) for the resumable checklist.
+See [`NEXT-TO-DO.md`](./NEXT-TO-DO.md) for the resumable checklist; per-phase architecture lives in [`wiki/entities/`](./wiki/entities/).
 
 ## Getting started
 
@@ -52,7 +53,7 @@ pnpm install
 pnpm gen:schema        # emits TS + Swift models from packages/schema
 pnpm typecheck
 pnpm lint
-pnpm test              # 41 Vitest tests over packages/shared-ts
+pnpm test              # 43 Vitest tests over packages/shared-ts
 ```
 
 ### Run the Chrome extension
@@ -123,7 +124,7 @@ Read the full design + architecture notes in the [wiki](./wiki/Home.md).
 
 Full phase plan, verification steps per phase, and architectural decisions live in the [wiki's decisions log](./wiki/decisions/).
 
-- `pnpm test` — Vitest over the shared package (41 tests, ~97% coverage on pure modules).
+- `pnpm test` — Vitest over the shared package (43 tests, ~97% coverage on pure modules).
 - `pnpm typecheck` — tsc across all TS workspaces via Turborepo.
 - `pnpm lint` / `pnpm format` — Biome.
 - `pnpm check:schema-drift` — regenerates the model code and fails if it differs from what's committed.

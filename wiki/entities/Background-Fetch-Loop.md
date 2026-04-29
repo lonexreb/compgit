@@ -46,6 +46,8 @@ These keys are a stable public contract — see [[../../CLAUDE]] section 4.
 - [[Shared-TypeScript-Core]]
 - [[WXT]]
 - [[GitHub-GraphQL-API]]
+- [[Apple-Surfaces]] — the Phase 2b mirror of this loop, driven by `BGAppRefreshTask` instead of `chrome.alarms`
+- [[OAuth-Worker]] — Phase 4 swaps `fetchContributionsCollection` for a Worker-fronted call without changing this loop
 
 ## Sources
 

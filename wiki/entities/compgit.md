@@ -21,7 +21,7 @@ It is deliberately small and opinionated:
 | iPhone | Home Screen + Lock Screen widget | In-app view |
 | macOS | Desktop widget + menu-bar | In-app view |
 
-The Chrome extension shipped in Phase 1. The Apple surfaces arrive in Phase 2.
+The Chrome extension shipped in Phase 1. The shared Swift core shipped in Phase 2a. The Apple surfaces (host apps + widget extensions) arrive in Phase 2b — see [[Apple-Surfaces]].
 
 ## How data flows
 
@@ -32,7 +32,7 @@ The Chrome extension shipped in Phase 1. The Apple surfaces arrive in Phase 2.
 5. The popup and side panel subscribe to that key via `useStorageValue` and re-render on change.
 6. `chrome.alarms` re-fires the fetch every 15 minutes.
 
-No backend in v1. All three surfaces will read-through the same shared container once Apple ships in Phase 2.
+No backend in v1. All three surfaces will read-through the same shared container once Apple ships in Phase 2b. Phase 4 ([[OAuth-Worker]]) replaces the PAT paste with a Cloudflare Worker brokering OAuth and KV-cached GraphQL — PAT mode stays available behind an Advanced toggle.
 
 ## Phased roadmap
 
@@ -40,15 +40,23 @@ See the master list in [[../Home#Roadmap]]. Verification per phase:
 
 - **Phase 0** — `pnpm install && pnpm gen:schema && pnpm typecheck && pnpm test && pnpm lint` all green; schema drift gate passes.
 - **Phase 1** — Chrome extension loaded unpacked; PAT paste shows real today count matching `github.com/<you>`; airplane mode renders cached data; storage inspector shows `contributions:<login>` with valid shape.
-- **Phase 2** — iOS + macOS widgets render the same today count on a real device.
-- **Phase 3** — comparison bar chart shows three other developers' counts matching their public profile graphs.
-- **Phase 4** — OAuth round-trip completes from each surface; `wrangler dev` shows KV cache hits.
-- **Phase 5** — hour-of-day radial chart renders; Lock Screen widget appears; Chrome Web Store accepts submission.
+- **Phase 2a** — `swift build` clean on Command Line Tools; `GitHubClient`, `SharedStore`, `KeychainPAT`, `Aggregate`, `Time`, `Errors`, and `Tokens` all surface from `CompgitCore`.
+- **Phase 2b** — iOS + macOS widgets render the same today count on a real device. Full checklist on [[Apple-Surfaces]].
+- **Phase 3** — comparison bar chart shows three other developers' counts matching their public profile graphs. See [[Compare-Surface]].
+- **Phase 4** — OAuth round-trip completes from each surface; `wrangler dev` shows KV cache hits. See [[OAuth-Worker]].
+- **Phase 5** — hour-of-day radial chart renders; Lock Screen widget appears; Chrome Web Store accepts submission. See [[Distribution-And-Release]].
+- **Phase 6** — Sentry → Worker → R2 → status page wired and live for 7 consecutive days; opt-in heartbeat respected; first weekly feedback triage executed. See [[Telemetry-And-Support]].
 
 ## Related
 
 - [[Schema-As-Source-Of-Truth]]
 - [[Shared-TypeScript-Core]]
+- [[Swift-Core]]
+- [[Apple-Surfaces]]
+- [[Compare-Surface]]
+- [[OAuth-Worker]]
+- [[Distribution-And-Release]]
+- [[Telemetry-And-Support]]
 - [[Background-Fetch-Loop]]
 - [[Terminal-Editorial]]
 - [[GitHub-GraphQL-API]]

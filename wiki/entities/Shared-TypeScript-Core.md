@@ -6,7 +6,7 @@
 
 | Module | Purpose |
 |---|---|
-| `github/graphql.ts` | `fetchContributionsCollection`, `fetchViewerLogin`. Zod-validated, typed errors (`AuthError`, `RateLimitError`, `NetworkError`, `ValidationError`). |
+| `github/graphql.ts` | `fetchContributionsCollection`, `fetchViewerLogin`. Zod-validated, typed errors (`AuthError`, `RateLimitError`, `NetworkError`, `ValidationError`). Both functions accept an optional `baseURL` so Phase 4 can flip them to the Worker without rewriting call sites. |
 | `github/errors.ts` | The error hierarchy. Opaque; consumers pattern-match via `instanceof`. |
 | `storage.ts` | `StorageDriver` interface plus an in-memory driver for tests. Chrome- and KV-specific drivers live in their respective packages. |
 | `cache.ts` | Generic `Cache<T>` over a `StorageDriver` with TTL and `readFresh` / `readStale` / `subscribe`. |
@@ -20,7 +20,7 @@ If the module closed over `chrome.*` directly, it would become impossible to run
 
 ## Testing
 
-Vitest, colocated `*.test.ts`. Coverage gate 80% lines / 75% branches via `vitest.config.ts`. Today: 41 tests, ~97% lines across covered modules.
+Vitest, colocated `*.test.ts`. Coverage gate 80% lines / 75% branches via `vitest.config.ts`. Today: 43 tests, ~97% lines across covered modules.
 
 The GraphQL client's tests mock a `FetchLike` that returns hand-built `Response` objects — no real network.
 
@@ -29,6 +29,8 @@ The GraphQL client's tests mock a `FetchLike` that returns hand-built `Response`
 - [[Background-Fetch-Loop]] — what `shared-ts` enables on the Chrome side
 - [[GitHub-GraphQL-API]] — the one external contract this module cares about
 - [[Schema-As-Source-Of-Truth]] — where `ContributionsCollection` comes from
+- [[OAuth-Worker]] — Phase 4 home of `shared-ts` running on Cloudflare Workers; `baseURL` is the seam
+- [[Compare-Surface]] — Phase 3 aggregator that lives in this package
 
 ## Sources
 

@@ -47,7 +47,7 @@ pnpm install
 
 # The inner loop
 pnpm gen:schema                # regen generated.ts + Generated.swift from compgit.schema.json
-pnpm test                      # vitest over packages/shared-ts (41 tests)
+pnpm test                      # vitest over packages/shared-ts (43 tests)
 pnpm typecheck                 # tsc --noEmit across workspaces (via Turbo)
 pnpm lint                      # biome check
 pnpm format                    # biome format --write
