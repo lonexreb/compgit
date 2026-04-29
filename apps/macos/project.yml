@@ -1,0 +1,103 @@
+name: CompgitMac
+options:
+  bundleIdPrefix: com.lonexreb.compgit.mac
+  deploymentTarget:
+    macOS: "14.0"
+  developmentLanguage: en
+  groupSortPosition: top
+  generateEmptyDirectories: true
+  createIntermediateGroups: true
+
+# Local SPM dependency. Path is relative to this project.yml.
+packages:
+  CompgitCore:
+    path: ../../packages/shared-swift
+
+attributes:
+  ORGANIZATIONNAME: lonexreb
+
+settings:
+  base:
+    DEVELOPMENT_TEAM: TEAMID
+    SWIFT_VERSION: "5.10"
+    SWIFT_STRICT_CONCURRENCY: complete
+    CODE_SIGN_STYLE: Automatic
+    APP_GROUP_ID: group.TEAMID.compgit
+    KEYCHAIN_ACCESS_GROUP: $(AppIdentifierPrefix)compgit
+    ENABLE_USER_SCRIPT_SANDBOXING: "YES"
+    ENABLE_HARDENED_RUNTIME: "YES"
+    GCC_TREAT_WARNINGS_AS_ERRORS: "YES"
+    SWIFT_TREAT_WARNINGS_AS_ERRORS: "YES"
+
+targets:
+  CompgitMacApp:
+    type: application
+    platform: macOS
+    sources:
+      - path: CompgitMacApp
+        optional: true
+    dependencies:
+      - package: CompgitCore
+        product: CompgitCore
+      - package: CompgitCore
+        product: CompgitSchema
+      - target: CompgitMacWidgetExtension
+        embed: true
+        codeSign: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.lonexreb.compgit.mac
+        LSMinimumSystemVersion: "14.0"
+    info:
+      path: CompgitMacApp/Info.plist
+      properties:
+        CFBundleDisplayName: Compgit
+        CFBundleShortVersionString: "0.1.0"
+        CFBundleVersion: "1"
+        LSApplicationCategoryType: public.app-category.developer-tools
+        # MenuBarExtra stub for Phase 5 — accessory-mode keeps the dock icon
+        # available on first launch; Phase 5 flips it via LSUIElement.
+        LSUIElement: false
+    entitlements:
+      path: CompgitMacApp/CompgitMacApp.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.security.network.client: true
+        com.apple.security.application-groups:
+          - group.TEAMID.compgit
+        keychain-access-groups:
+          - $(AppIdentifierPrefix)compgit
+
+  CompgitMacWidgetExtension:
+    type: app-extension
+    platform: macOS
+    sources:
+      - path: CompgitMacWidgetExtension
+        optional: true
+    dependencies:
+      - package: CompgitCore
+        product: CompgitCore
+      - package: CompgitCore
+        product: CompgitSchema
+      - sdk: WidgetKit.framework
+      - sdk: SwiftUI.framework
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.lonexreb.compgit.mac.widget
+    info:
+      path: CompgitMacWidgetExtension/Info.plist
+      properties:
+        CFBundleDisplayName: Compgit Widget
+        CFBundleShortVersionString: "0.1.0"
+        CFBundleVersion: "1"
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    entitlements:
+      path: CompgitMacWidgetExtension/CompgitMacWidgetExtension.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.security.network.client: false
+        com.apple.security.application-groups:
+          - group.TEAMID.compgit
+        keychain-access-groups:
+          - $(AppIdentifierPrefix)compgit
