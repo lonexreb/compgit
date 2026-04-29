@@ -6,14 +6,17 @@ import CompgitSchema
 public actor GitHubClient {
     private let session: URLSession
     private let now: @Sendable () -> Date
-    private static let endpoint = URL(string: "https://api.github.com/graphql")!
+    private let endpoint: URL
+    public static let defaultEndpoint = URL(string: "https://api.github.com/graphql")!
     private static let userAgent = "compgit/0.0.0"
 
     public init(
         session: URLSession = .shared,
+        baseURL: URL = GitHubClient.defaultEndpoint,
         now: @escaping @Sendable () -> Date = { Date() }
     ) {
         self.session = session
+        self.endpoint = baseURL
         self.now = now
     }
 
@@ -62,7 +65,7 @@ public actor GitHubClient {
     // MARK: - Private
 
     private func postGraphQL(body: [String: Any], token: String) async throws -> Data {
-        var request = URLRequest(url: Self.endpoint)
+        var request = URLRequest(url: endpoint)
         request.httpMethod = "POST"
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
