@@ -12,6 +12,7 @@
 | `Aggregate.swift` | `CompgitAggregate` enum namespace with `totalInWindow`, `sparklineSeries`, `streak`, `byWeek/Month/Year`. Pure, platform-free. |
 | `Time.swift` | `CompgitTime` namespace — `todayISODate`, `daysAgoISODate`, `rangeDates`, `isoWeekKey`, `monthKey`, `yearKey`. |
 | `Errors.swift` | `CompgitError` enum: `auth`, `rateLimited(resetAt)`, `network`, `validation`, `notAuthenticated`. Mirrors the TS error hierarchy. |
+| `Tokens.swift` | `CompgitTokens` namespace — OKLCH colour triples, type sizes (pt), 4-pt spacing, motion durations. Mirrors `apps/chrome/styles/tokens.css` byte-for-byte. Pure data — no SwiftUI / AppKit / UIKit imports. |
 | `CompgitCore.swift` | Version namespace + file index. |
 
 ## Why mirror TS instead of sharing
