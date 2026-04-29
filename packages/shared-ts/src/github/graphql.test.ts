@@ -148,6 +148,23 @@ describe('fetchContributionsCollection', () => {
       }),
     ).rejects.toBeInstanceOf(ValidationError);
   });
+
+  it('honors a custom baseURL when provided (Phase 4: Worker proxy)', async () => {
+    let calledWith = '';
+    const fetchImpl = mockFetch((input) => {
+      calledWith = input;
+      return okJson(happyCalendar);
+    });
+    await fetchContributionsCollection({
+      login: 'torvalds',
+      from: '2026-04-13T00:00:00Z',
+      to: '2026-04-20T23:59:59Z',
+      token: 'ghp_test',
+      fetchImpl,
+      baseURL: 'https://api.compgit.example/contributions',
+    });
+    expect(calledWith).toBe('https://api.compgit.example/contributions');
+  });
 });
 
 describe('fetchViewerLogin', () => {
@@ -159,5 +176,15 @@ describe('fetchViewerLogin', () => {
   it('throws AuthError on 401', async () => {
     const fetchImpl = mockFetch(() => new Response('{}', { status: 401 }));
     await expect(fetchViewerLogin('bad', fetchImpl)).rejects.toBeInstanceOf(AuthError);
+  });
+
+  it('honors a custom baseURL when provided', async () => {
+    let calledWith = '';
+    const fetchImpl = mockFetch((input) => {
+      calledWith = input;
+      return okJson({ data: { viewer: { login: 'torvalds' } } });
+    });
+    await fetchViewerLogin('ghp_test', fetchImpl, 'https://api.compgit.example/me');
+    expect(calledWith).toBe('https://api.compgit.example/me');
   });
 });

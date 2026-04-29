@@ -2,7 +2,7 @@ import { z } from 'zod';
 import type { ContributionDay, ContributionsCollection } from '../generated';
 import { AuthError, NetworkError, RateLimitError, ValidationError } from './errors';
 
-const GITHUB_GRAPHQL_URL = 'https://api.github.com/graphql';
+export const GITHUB_GRAPHQL_URL = 'https://api.github.com/graphql';
 
 const CONTRIBUTIONS_QUERY = /* GraphQL */ `
   query GetContributionCalendar($login: String!, $from: DateTime!, $to: DateTime!) {
@@ -78,15 +78,16 @@ export type FetchLike = (input: string, init: RequestInit) => Promise<Response>;
 interface PostOptions {
   token: string;
   fetchImpl?: FetchLike;
+  baseURL?: string;
 }
 
 async function postGraphQL(
   body: object,
-  { token, fetchImpl = fetch }: PostOptions,
+  { token, fetchImpl = fetch, baseURL = GITHUB_GRAPHQL_URL }: PostOptions,
 ): Promise<Response> {
   let response: Response;
   try {
-    response = await fetchImpl(GITHUB_GRAPHQL_URL, {
+    response = await fetchImpl(baseURL, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -125,6 +126,7 @@ export interface FetchContributionsArgs {
   token: string;
   fetchImpl?: FetchLike;
   now?: () => Date;
+  baseURL?: string;
 }
 
 export async function fetchContributionsCollection(
@@ -135,7 +137,11 @@ export async function fetchContributionsCollection(
       query: CONTRIBUTIONS_QUERY,
       variables: { login: args.login, from: args.from, to: args.to },
     },
-    { token: args.token, ...(args.fetchImpl ? { fetchImpl: args.fetchImpl } : {}) },
+    {
+      token: args.token,
+      ...(args.fetchImpl ? { fetchImpl: args.fetchImpl } : {}),
+      ...(args.baseURL ? { baseURL: args.baseURL } : {}),
+    },
   );
   const json: unknown = await response.json();
   const parsed = contributionsResponseSchema.safeParse(json);
@@ -166,10 +172,18 @@ export async function fetchContributionsCollection(
   };
 }
 
-export async function fetchViewerLogin(token: string, fetchImpl?: FetchLike): Promise<string> {
+export async function fetchViewerLogin(
+  token: string,
+  fetchImpl?: FetchLike,
+  baseURL?: string,
+): Promise<string> {
   const response = await postGraphQL(
     { query: VIEWER_QUERY },
-    { token, ...(fetchImpl ? { fetchImpl } : {}) },
+    {
+      token,
+      ...(fetchImpl ? { fetchImpl } : {}),
+      ...(baseURL ? { baseURL } : {}),
+    },
   );
   const json: unknown = await response.json();
   const parsed = viewerResponseSchema.safeParse(json);
