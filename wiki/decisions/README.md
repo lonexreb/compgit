@@ -16,3 +16,4 @@ Every decision page:
 - [[2026-04-20-hand-rolled-schemagen]] — drop quicktype, write a bespoke emitter.
 - [[2026-04-20-no-cal-heatmap]] — no chart library; hand-roll SVG charts.
 - [[2026-04-21-removed-swift-tests]] — skip Swift test target in Phase 0; re-introduce in Phase 2.
+- [[2026-04-29-end-to-end-plan-expansion]] — lift the plan from terse next-tasks to per-phase entities with verification gates; add Phase 6.
