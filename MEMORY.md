@@ -27,7 +27,7 @@
 - Design direction: Terminal Editorial (dark, Fraunces serif + JetBrains Mono, one accent). — [[wiki/entities/Terminal-Editorial]]
 - Tests required on `packages/shared-ts/*` (pure modules). No component tests in Phase 1 — UI is verified manually until Phase 5.
 - Swift tests return with Phase 2b once full Xcode is installed; use Swift Testing (`import Testing`) per the global rule. — [[wiki/decisions/2026-04-21-removed-swift-tests]]
-- Storage keys are stable contracts across Chrome + Swift: `auth.token`, `me.login`, `contributions:<login>`, `last-sync`.
+- Storage keys are stable contracts across Chrome + Swift: `auth.token`, `me.login`, `contributions:<login>`, `last-sync`. Phase 3 adds `follows` + `compare:<login>` (1h TTL) — see [[wiki/entities/Compare-Surface]]. Phase 6 adds `telemetry.optIn` — see [[wiki/entities/Telemetry-And-Support]].
 - Conventional commit prefixes: `feat:`, `fix:`, `refactor:`, `docs:`, `chore:`, `perf:`, `test:`, `ci:`.
 - Obsidian wiki is the knowledge base. Entity pages, dated decisions, daily notes — all cross-linked with `[[wikilinks]]`.
 
@@ -41,18 +41,21 @@
 - Widget memory budget on iOS is ~30 MB — cap chart data at 14–50 points.
 - `swift build` on the dev machine uses Command Line Tools (no iOS SDK). CI runs the same command on macos-14 with Xcode 15.
 - CI workflow lives at repo root (`.github/workflows/ci.yml`) — the `compgit/` folder IS the repo root now.
+- `GitHubClient` (TS + Swift) gets a `baseURL` arg in pre-Phase-2b prep so Phase 4 can flip from `api.github.com/graphql` to the Worker without rewriting call sites. Heuristic for Apple OAuth bearer vs. PAT: bearer starts with `eyJ`. — see [[wiki/entities/OAuth-Worker]].
+- Sentry / heartbeat / status page wiring is **Phase 6**, not "polish". Privacy-policy retention numbers live in [[wiki/entities/Telemetry-And-Support]] and are referenced verbatim by the storefront listings in [[wiki/entities/Distribution-And-Release]].
 
 ## Phase progress
 
 - **Phase 0** ✅ monorepo + schema codegen + CI — verified 2026-04-20.
 - **Phase 1** ✅ Chrome extension MVP shipped — verified 2026-04-21.
 - **Phase 2a** ✅ Swift core (`GitHubClient`, `SharedStore`, `KeychainPAT`, `Aggregate`, `Time`, `Errors`) — `swift build` green 2026-04-21.
-- **Phase 2b** 🟡 iOS + macOS Xcode projects + widget extensions — blocked on full Xcode install.
-- **Phase 3** comparison across surfaces — planned.
-- **Phase 4** Cloudflare Worker + OAuth — planned, domain ready.
-- **Phase 5** polish + store submissions — planned.
+- **Phase 2b** 🟡 iOS + macOS apps + widget extensions — blocked on full Xcode. Architecture: [[wiki/entities/Apple-Surfaces]].
+- **Phase 3** 📋 follow + compare across surfaces — [[wiki/entities/Compare-Surface]].
+- **Phase 4** 📋 Cloudflare Worker + OAuth + KV — [[wiki/entities/OAuth-Worker]] (domain ready).
+- **Phase 5** 📋 store submissions + polish — [[wiki/entities/Distribution-And-Release]].
+- **Phase 6** 📋 telemetry + support — [[wiki/entities/Telemetry-And-Support]].
 
-Full resumable checklist lives in [NEXT-TO-DO.md](./NEXT-TO-DO.md).
+Plan was expanded end-to-end on 2026-04-29 — see [[wiki/decisions/2026-04-29-end-to-end-plan-expansion]]. Each phase's `Verify:` lines and exit gate live in [NEXT-TO-DO.md](./NEXT-TO-DO.md).
 
 ## Phase 2b resume notes
 
